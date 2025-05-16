@@ -789,6 +789,10 @@ while ($file = $filesResult->fetch_assoc()) {
                 <a href="design_queue_list.php" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> กลับไปหน้ารายการ
                 </a>
+                <!-- เพิ่มปุ่มนี้ในส่วนของเมนูดำเนินการ -->
+<a href="../invoices/create_invoice.php?order_id=<?php echo $design['order_id']; ?>" class="btn btn-success">
+    <i class="fas fa-file-invoice"></i> สร้างใบกำกับภาษี
+</a>
             </div>
         </div>
 

@@ -112,24 +112,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แก้ไขคิวออกแบบ - <?php echo $queue['queue_code']; ?></title>
+    <title>ແກ້ໄຂຄິວອອກແບບ - <?php echo $queue['queue_code']; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- ใช้ฟอนต์ Saysettha สำหรับภาษาลาว -->
+    <style>
+        @font-face {
+            font-family: 'Saysettha';
+            src: url('assets/fonts/Saysettha.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, option, label, span, div, 
+        .form-control, .btn, .card-title, .card-text, .navbar-brand, .nav-link, .dropdown-item {
+            font-family: 'Saysettha', sans-serif !important;
+        }
+
+        input::placeholder, textarea::placeholder {
+            font-family: 'Saysettha', sans-serif !important;
+        }
+        
+        .logo-image {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-info {
+            margin-bottom: 20px;
+        }
+
+        .company-info h4 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .company-info p {
+            margin-bottom: 5px;
+            color: #555;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.php">
-                <i class="fas fa-tshirt me-2"></i> ระบบบริหารร้านเสื้อพิมพ์ลาย
+               
+                ລະບົບບໍລິຫານຮ້ານເສື້ອພິມລາຍ
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -138,22 +177,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="design_queue_list.php">
-                            <i class="fas fa-list-ul"></i> คิวออกแบบ
+                            <i class="fas fa-list-ul"></i> ຄິວອອກແບບ
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-shopping-cart"></i> คำสั่งซื้อ
+                            <i class="fas fa-shopping-cart"></i> ຄຳສັ່ງຊື້
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-industry"></i> การผลิต
+                            <i class="fas fa-industry"></i> ການຜະລິດ
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-chart-line"></i> รายงาน
+                            <i class="fas fa-chart-line"></i> ລາຍງານ
                         </a>
                     </li>
                 </ul>
@@ -165,8 +204,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><span class="dropdown-item-text text-muted small"><?php echo ucfirst($_SESSION['role']); ?></span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ตั้งค่าบัญชี</a></li>
-                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ຕັ້ງຄ່າບັນຊີ</a></li>
+                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ອອກຈາກລະບົບ</a></li>
                         </ul>
                     </div>
                 </div>
@@ -177,15 +216,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container my-4">
         <div class="d-flex justify-between align-items-center mb-4">
             <div>
-                <h1 class="text-2xl font-bold mb-1">แก้ไขคิวออกแบบ</h1>
+                <h1 class="text-2xl font-bold mb-1">ແກ້ໄຂຄິວອອກແບບ</h1>
                 <h2 class="text-xl text-primary"><?php echo $queue['queue_code']; ?></h2>
             </div>
             <div>
                 <a href="view_design_queue.php?id=<?php echo $designId; ?>" class="btn btn-info me-2">
-                    <i class="fas fa-eye"></i> ดูรายละเอียด
+                    <i class="fas fa-eye"></i> ເບິ່ງລາຍລະອຽດ
                 </a>
                 <a href="design_queue_list.php" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> กลับไปหน้ารายการ
+                    <i class="fas fa-arrow-left"></i> ກັບໄປໜ້າລາຍການ
                 </a>
             </div>
         </div>
@@ -202,29 +241,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                         <!-- ข้อมูลลูกค้า -->
                         <div class="col-md-6 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ข้อมูลลูกค้า</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ຂໍ້ມູນລູກຄ້າ</h3>
                             
                             <div class="mb-3">
-                                <label for="customer_name" class="form-label required">ชื่อลูกค้า/ทีม</label>
+                                <label for="customer_name" class="form-label required">ຊື່ລູກຄ້າ/ທີມ</label>
                                 <input type="text" class="form-control" id="customer_name" name="customer_name" 
                                        value="<?php echo htmlspecialchars($queue['customer_name']); ?>" required>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="customer_phone" class="form-label">เบอร์โทรศัพท์</label>
+                                <label for="customer_phone" class="form-label">ເບີໂທລະສັບ/FB</label>
                                 <input type="text" class="form-control" id="customer_phone" name="customer_phone"
                                        value="<?php echo htmlspecialchars($queue['customer_phone']); ?>">
                             </div>
                             
                             <div class="mb-3">
-                                <label for="customer_contact" class="form-label">ช่องทางติดต่ออื่นๆ</label>
+                                <label for="customer_contact" class="form-label">ຊ່ອງທາງຕິດຕໍ່ອື່ນໆ</label>
                                 <input type="text" class="form-control" id="customer_contact" name="customer_contact" 
-                                       placeholder="LINE ID, Facebook, Email, ฯลฯ"
+                                       placeholder="LINE ID, Facebook, Email, ອື່ນໆ"
                                        value="<?php echo htmlspecialchars($queue['customer_contact']); ?>">
                             </div>
                             
                             <div class="mb-3">
-                                <label for="team_name" class="form-label">ชื่อทีม (ถ้ามี)</label>
+                                <label for="team_name" class="form-label">ຊື່ທີມ (ຖ້າມີ)</label>
                                 <input type="text" class="form-control" id="team_name" name="team_name"
                                        value="<?php echo htmlspecialchars($queue['team_name']); ?>">
                             </div>
@@ -232,33 +271,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <!-- รายละเอียดการออกแบบ -->
                         <div class="col-md-6 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">รายละเอียดการออกแบบ</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ລາຍລະອຽດການອອກແບບ</h3>
                             
                             <div class="mb-3">
-                                <label for="design_type" class="form-label">ประเภทของการออกแบบ</label>
+                                <label for="design_type" class="form-label">ປະເພດເສື້ອ</label>
                                 <select class="form-select" id="design_type" name="design_type">
-                                    <option value="">-- เลือกประเภท --</option>
-                                    <option value="เสื้อกีฬา" <?php echo $queue['design_type'] === 'เสื้อกีฬา' ? 'selected' : ''; ?>>เสื้อกีฬา</option>
-                                    <option value="เสื้อคลาส/รุ่น" <?php echo $queue['design_type'] === 'เสื้อคลาส/รุ่น' ? 'selected' : ''; ?>>เสื้อคลาส/รุ่น</option>
-                                    <option value="เสื้อทีม" <?php echo $queue['design_type'] === 'เสื้อทีม' ? 'selected' : ''; ?>>เสื้อทีม</option>
-                                    <option value="เสื้อบริษัท/องค์กร" <?php echo $queue['design_type'] === 'เสื้อบริษัท/องค์กร' ? 'selected' : ''; ?>>เสื้อบริษัท/องค์กร</option>
-                                    <option value="เสื้อกิจกรรม" <?php echo $queue['design_type'] === 'เสื้อกิจกรรม' ? 'selected' : ''; ?>>เสื้อกิจกรรม</option>
-                                    <option value="อื่นๆ" <?php echo $queue['design_type'] === 'อื่นๆ' ? 'selected' : ''; ?>>อื่นๆ</option>
+                                    <option value="">-- ເລືອກປະເພດ --</option>
+                                    <option value="ເສື້ອກິລາ" <?php echo $queue['design_type'] === 'เสื้อกีฬา' ? 'selected' : ''; ?>>ເສື້ອກິລາ</option>
+                                    <option value="ເສື້ອທີມງາມ" <?php echo $queue['design_type'] === 'เสื้อทีมงาน' ? 'selected' : ''; ?>>ເສື້ອທີມງາມ</option>
+                                    <option value="ອື່ນໆ" <?php echo $queue['design_type'] === 'อื่นๆ' ? 'selected' : ''; ?>>ອື່ນໆ</option>
                                 </select>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="shirt_color" class="form-label">สีเสื้อ</label>
+                                <label for="shirt_color" class="form-label">ສີເສື້ອ</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-palette"></i></span>
                                     <input type="text" class="form-control" id="shirt_color" name="shirt_color" 
-                                           placeholder="เช่น ขาว, ดำ, น้ำเงินเข้ม"
+                                           placeholder="ເຊັ່ນ: ຂາວ, ດຳ, ຟ້າເຂັ້ມ"
                                            value="<?php echo htmlspecialchars($queue['shirt_color']); ?>">
                                 </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="deadline" class="form-label">วันที่ต้องการงาน</label>
+                                <label for="deadline" class="form-label">ວັນທີ່ຕ້ອງການ</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                     <input type="date" class="form-control" id="deadline" name="deadline"
@@ -267,9 +303,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             
                             <div class="mb-3">
-                                <label for="designer_id" class="form-label">มอบหมายให้ดีไซเนอร์</label>
+                                <label for="designer_id" class="form-label">ຜູ້ຮັບຜິດຊອບຄິວ</label>
                                 <select class="form-select" id="designer_id" name="designer_id">
-                                    <option value="">-- ยังไม่กำหนด --</option>
+                                    <option value="">-- ຍັງບໍ່ໄດ້ກຳນົດ --</option>
                                     <?php 
                                     $designersResult->data_seek(0); // รีเซ็ต pointer ของผลลัพธ์
                                     while ($designer = $designersResult->fetch_assoc()): 
@@ -284,32 +320,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <!-- รายละเอียดเพิ่มเติม -->
                         <div class="col-12 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">รายละเอียดเพิ่มเติม</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ລາຍລະອຽດເພີ່ມເຕີມ</h3>
                             
                             <div class="mb-3">
-                                <label for="design_details" class="form-label required">รายละเอียดการออกแบบ</label>
+                                <label for="design_details" class="form-label required">ລາຍລະອຽດການອອກແບບ</label>
                                 <textarea class="form-control" id="design_details" name="design_details" rows="5" required
-                                          placeholder="ระบุรายละเอียดการออกแบบ เช่น โลโก้, สี, ฟอนต์, ข้อความ, แนวคิดการออกแบบ ฯลฯ"><?php echo htmlspecialchars($queue['design_details']); ?></textarea>
+                                          placeholder="ລະບຸລາຍລະອຽດການອອກແບບ ເຊັ່ນ ໂລໂກ້, ສີ, ຟອນ, ຂໍ້ຄວາມ, ແນວຄິດການອອກແບບ ອື່ນໆ"><?php echo htmlspecialchars($queue['design_details']); ?></textarea>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="notes" class="form-label">บันทึกเพิ่มเติม</label>
+                                <label for="notes" class="form-label">ບັນທຶກເພີ່ມເຕີມ</label>
                                 <textarea class="form-control" id="notes" name="notes" rows="3"
-                                          placeholder="บันทึกเพิ่มเติมอื่นๆ ที่ต้องการแจ้งให้ทีมออกแบบทราบ"><?php echo htmlspecialchars($queue['notes']); ?></textarea>
+                                          placeholder="ບັນທຶກເພີ່ມເຕີມອື່ນໆ ທີ່ຕ້ອງການແຈ້ງໃຫ້ທີມອອກແບບຮູ້"><?php echo htmlspecialchars($queue['notes']); ?></textarea>
                             </div>
                             
                             <!-- ไฟล์แนบที่มีอยู่ -->
                             <?php if ($filesResult->num_rows > 0): ?>
                                 <div class="mb-4">
-                                    <label class="form-label">ไฟล์อ้างอิงที่มีอยู่</label>
+                                    <label class="form-label">ໄຟລ໌ຕົວຢ່າງທີ່ມີຢູ່</label>
                                     <div class="table-responsive">
                                         <table class="table table-sm table-striped">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>ชื่อไฟล์</th>
-                                                    <th class="text-center">ประเภท</th>
-                                                    <th>วันที่อัปโหลด</th>
-                                                    <th>จัดการ</th>
+                                                    <th>ຊື່ໄຟລ໌</th>
+                                                    <th class="text-center">ປະເພດ</th>
+                                                    <th>ວັນທີອັບໂຫລດ</th>
+                                                    <th>ຈັດການ</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -317,11 +353,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     <?php
                                                     $fileExt = strtolower(pathinfo($file['file_name'], PATHINFO_EXTENSION));
                                                     $fileIcon = 'file-alt';
-                                                    $fileType = 'ไฟล์';
+                                                    $fileType = 'ໄຟລ໌';
                                                     
                                                     if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
                                                         $fileIcon = 'file-image';
-                                                        $fileType = 'รูปภาพ';
+                                                        $fileType = 'ຮູບພາບ';
                                                     } elseif ($fileExt === 'pdf') {
                                                         $fileIcon = 'file-pdf';
                                                         $fileType = 'PDF';
@@ -347,15 +383,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         <td><?php echo date('d/m/Y H:i', strtotime($file['upload_date'])); ?></td>
                                                         <td>
                                                             <div class="btn-group btn-group-sm">
-                                                                <a href="<?php echo $file['file_path']; ?>" class="btn btn-sm btn-info" target="_blank" title="ดูไฟล์">
+                                                                <a href="<?php echo $file['file_path']; ?>" class="btn btn-sm btn-info" target="_blank" title="ເບິ່ງໄຟລ໌">
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
-                                                                <a href="<?php echo $file['file_path']; ?>" class="btn btn-sm btn-success" download title="ดาวน์โหลด">
+                                                                <a href="<?php echo $file['file_path']; ?>" class="btn btn-sm btn-success" download title="ດາວໂຫລດ">
                                                                     <i class="fas fa-download"></i>
                                                                 </a>
                                                                 <a href="delete_file.php?id=<?php echo $file['file_id']; ?>&design_id=<?php echo $designId; ?>" 
                                                                    class="btn btn-sm btn-danger" 
-                                                                   onclick="return confirm('คุณแน่ใจหรือไม่ที่จะลบไฟล์นี้?');" title="ลบไฟล์">
+                                                                   onclick="return confirm('ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບໄຟລ໌ນີ້?');" title="ລຶບໄຟລ໌">
                                                                     <i class="fas fa-trash-alt"></i>
                                                                 </a>
                                                             </div>
@@ -369,10 +405,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?php endif; ?>
                             
                             <div class="mb-3">
-                                <label for="reference_files" class="form-label">เพิ่มไฟล์อ้างอิงใหม่</label>
+                                <label for="reference_files" class="form-label">ເພີ່ມໄຟລ໌ຕົວຢ່າງໃໝ່</label>
                                 <input type="file" class="form-control" id="reference_files" name="reference_files[]" multiple>
                                 <div class="form-text">
-                                    <i class="fas fa-info-circle"></i> ไฟล์ที่อนุญาต: รูปภาพ (JPG, PNG, GIF), ไฟล์ PDF, AI, PSD, SVG, ไฟล์ ZIP ขนาดไม่เกิน 10MB ต่อไฟล์
+                                    <i class="fas fa-info-circle"></i> ໄຟລ໌ທີ່ອະນຸຍາດ: ຮູບພາບ (JPG, PNG, GIF), ໄຟລ໌ PDF, AI, PSD, SVG, ໄຟລ໌ ZIP ຂະໜາດບໍ່ເກີນ 10MB ຕໍ່ໄຟລ໌
                                 </div>
                             </div>
                         </div>
@@ -380,10 +416,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
+                            <i class="fas fa-save"></i> ບັນທຶກການປ່ຽນແປງ
                         </button>
                         <a href="view_design_queue.php?id=<?php echo $designId; ?>" class="btn btn-outline-secondary btn-lg ms-2">
-                            <i class="fas fa-times"></i> ยกเลิก
+                            <i class="fas fa-times"></i> ຍົກເລີກ
                         </a>
                     </div>
                 </form>
@@ -400,7 +436,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ตรวจสอบว่ามีไฟล์ที่เลือกหรือไม่
             if (this.files.length > 0) {
                 // แสดงจำนวนไฟล์ที่เลือก
-                console.log(`เลือก ${this.files.length} ไฟล์`);
+                console.log(`ເລືອກ ${this.files.length} ໄຟລ໌`);
                 
                 // ตรวจสอบขนาดไฟล์
                 for (let i = 0; i < this.files.length; i++) {
@@ -408,7 +444,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     const fileSize = file.size / 1024 / 1024; // แปลงเป็น MB
                     
                     if (fileSize > 10) {
-                        alert(`ไฟล์ "${file.name}" มีขนาดใหญ่เกินไป (${fileSize.toFixed(2)} MB). ขนาดไฟล์สูงสุดที่อนุญาตคือ 10 MB.`);
+                        alert(`ໄຟລ໌ "${file.name}" ມີຂະໜາດໃຫຍ່ເກີນໄປ (${fileSize.toFixed(2)} MB). ຂະໜາດໄຟລ໌ສູງສຸດທີ່ອະນຸຍາດແມ່ນ 10 MB.`);
                         this.value = ''; // ล้างการเลือกไฟล์
                         break;
                     }

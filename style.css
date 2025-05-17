@@ -4,6 +4,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
 
 body {
+    @font-face {
+    font-family: 'Saysettha';
+    src: url('../fonts/Saysettha.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, option, label, span, div, 
+.form-control, .btn, .card-title, .card-text, .navbar-brand, .nav-link, .dropdown-item {
+    font-family: 'Saysettha', sans-serif !important;
+}
+
+input::placeholder, textarea::placeholder {
+    font-family: 'Saysettha', sans-serif !important;
+}
     font-family: 'Sarabun', sans-serif;
     font-size: 0.95rem;
     color: #333;

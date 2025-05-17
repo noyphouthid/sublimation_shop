@@ -44,13 +44,14 @@ function generateQueueCode($conn, $userCode = 'PKLF') {
 // ฟังก์ชันแปลงสถานะเป็นภาษาไทย
 function getStatusThai($status) {
     $statusMap = [
-        'pending' => 'รอออกแบบ',
-        'in_progress' => 'กำลังออกแบบ',
-        'customer_review' => 'ส่งให้ลูกค้าตรวจสอบ',
-        'revision' => 'ลูกค้าขอแก้ไข',
-        'approved' => 'ลูกค้าอนุมัติแล้ว',
-        'production' => 'ส่งไปยังระบบผลิต',
-        'completed' => 'เสร็จสมบูรณ์'
+               'pending' => 'ລໍຖ້າອອກແບບ',
+        'in_progress' => 'ກຳລັງອອກແບບ',
+        'customer_review' => 'ສົ່ງໃຫ້ລູກຄ້າກວດສອບ',
+        'revision' => 'ລູກຄ້າຂໍແກ້ໄຂ',
+        'approved' => 'ລູກຄ້າອະນຸມັດແລ້ວ',
+        'production' => 'ສົ່ງໄປຍັງລະບົບຜະລິດ',
+        'completed' => 'ສຳເລັດສົມບູນ'
+
     ];
     
     return isset($statusMap[$status]) ? $statusMap[$status] : $status;
@@ -112,7 +113,7 @@ function formatThaiDate($date) {
     if (empty($date)) return '-';
     
     $thaiMonths = [
-        1 => 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+        1 => 'ມັງກອນ', 'ກຸມພາ', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
         'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
     ];
     

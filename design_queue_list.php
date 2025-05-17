@@ -61,18 +61,31 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบคิวออกแบบ - รายการคิวทั้งหมด</title>
+    <title>ລະບົບຈັດການຄິວອອກແບບ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+         @font-face {
+            font-family: 'Saysettha OT';
+            src: url('assets/fonts/saysettha-ot.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, option, label, span, div {
+            font-family: 'Saysettha OT', sans-serif !important;
+        }
+
+    </style>
 </head>
 <body class="bg-gray-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.php">
-                <i class="fas fa-tshirt me-2"></i> ระบบบริหารร้านเสื้อพิมพ์ลาย
+                <i class="fas fa-tshirt me-2"></i> ລະບົບຈັດການຄິວອອກແບບ
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -81,22 +94,22 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="design_queue_list.php">
-                            <i class="fas fa-list-ul"></i> คิวออกแบบ
+                            <i class="fas fa-list-ul"></i> ຄິວອອກແບບ
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-shopping-cart"></i> คำสั่งซื้อ
+                            <i class="fas fa-shopping-cart"></i> ຄຳສັ່ງຊື້
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-industry"></i> การผลิต
+                            <i class="fas fa-industry"></i> ການຜະລິດ
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-chart-line"></i> รายงาน
+                            <i class="fas fa-chart-line"></i> ລາຍງານ
                         </a>
                     </li>
                 </ul>
@@ -108,8 +121,7 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><span class="dropdown-item-text text-muted small"><?php echo ucfirst($_SESSION['role']); ?></span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ตั้งค่าบัญชี</a></li>
-                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a></li>
+                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ອອກຈາກລະບົບ</a></li>
                         </ul>
                     </div>
                 </div>
@@ -124,14 +136,14 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                 <div class="card bg-secondary text-white h-100">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-0">รอออกแบบ</h6>
+                            <h6 class="card-title mb-0">ຖ້າອອກແບບ</h6>
                             <h2 class="my-2"><?php echo $pendingResult['count']; ?></h2>
-                            <p class="card-text mb-0">คิวที่รอดำเนินการ</p>
+                            <p class="card-text mb-0">ຄິວທີ່ຖ້າດຳເນີນການ</p>
                         </div>
                         <i class="fas fa-clock fa-3x text-white-50"></i>
                     </div>
                     <a href="?status=pending" class="card-footer bg-secondary text-white text-decoration-none d-block small">
-                        <i class="fas fa-search me-1"></i> ดูคิวที่รอออกแบบ
+                        <i class="fas fa-search me-1"></i> ເບີ່ງຄິວທີ່ຖ້າອອກແບບ
                     </a>
                 </div>
             </div>
@@ -139,14 +151,14 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                 <div class="card bg-primary text-white h-100">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-0">กำลังออกแบบ</h6>
+                            <h6 class="card-title mb-0">ກຳລັງອອກແບບ</h6>
                             <h2 class="my-2"><?php echo $inProgressResult['count']; ?></h2>
-                            <p class="card-text mb-0">คิวที่กำลังดำเนินการ</p>
+                            <p class="card-text mb-0">ຄິວທີ່ກຳລັງດຳເນີນການ</p>
                         </div>
                         <i class="fas fa-paint-brush fa-3x text-white-50"></i>
                     </div>
                     <a href="?status=in_progress" class="card-footer bg-primary text-white text-decoration-none d-block small">
-                        <i class="fas fa-search me-1"></i> ดูคิวที่กำลังออกแบบ
+                        <i class="fas fa-search me-1"></i> ເບີ່ງຄິວທີ່ກຳລັງອອກແບບ
                     </a>
                 </div>
             </div>
@@ -154,14 +166,14 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                 <div class="card bg-info text-white h-100">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-0">รอลูกค้าตรวจสอบ</h6>
+                            <h6 class="card-title mb-0">ຖ້າ Feedback ຈາກລູກຄ້າ</h6>
                             <h2 class="my-2"><?php echo $reviewResult['count']; ?></h2>
-                            <p class="card-text mb-0">คิวที่รอการอนุมัติ</p>
+                            <p class="card-text mb-0">ຄິວທີ່ຖ້າອະນຸມັດ</p>
                         </div>
                         <i class="fas fa-eye fa-3x text-white-50"></i>
                     </div>
                     <a href="?status=customer_review" class="card-footer bg-info text-white text-decoration-none d-block small">
-                        <i class="fas fa-search me-1"></i> ดูคิวที่รอลูกค้าตรวจสอบ
+                        <i class="fas fa-search me-1"></i> ເບີ່ງຄິວທີ່ລູກກວດສອບ
                     </a>
                 </div>
             </div>
@@ -169,23 +181,23 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                 <div class="card bg-success text-white h-100">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-0">อนุมัติแล้ว</h6>
+                            <h6 class="card-title mb-0">ອະນຸມັດແລ້ວ</h6>
                             <h2 class="my-2"><?php echo $approvedResult['count']; ?></h2>
-                            <p class="card-text mb-0">คิวที่พร้อมส่งผลิต</p>
+                            <p class="card-text mb-0">ຄິວທີ່ພ້ອມສົ່ງຜະລິດ</p>
                         </div>
                         <i class="fas fa-check-circle fa-3x text-white-50"></i>
                     </div>
                     <a href="?status=approved" class="card-footer bg-success text-white text-decoration-none d-block small">
-                        <i class="fas fa-search me-1"></i> ดูคิวที่อนุมัติแล้ว
+                        <i class="fas fa-search me-1"></i> ເບີ່ງຄິວທີ່ອະນຸມັດແລ້ວ
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-2xl font-bold">รายการคิวออกแบบ</h1>
+            <h1 class="text-2xl font-bold">ລາຍການຄິວອອກແບບ</h1>
             <a href="add_design_queue.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> เพิ่มคิวใหม่
+                <i class="fas fa-plus"></i> ເພີ່ມຄິວໃໝ່
             </a>
         </div>
 
@@ -194,22 +206,22 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
             <div class="card-body">
                 <form method="get" class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">สถานะ:</label>
+                        <label class="form-label">ສະຖານະ:</label>
                         <select name="status" class="form-select">
-                            <option value="">ทั้งหมด</option>
-                            <option value="pending" <?php echo $statusFilter == 'pending' ? 'selected' : ''; ?>>รอออกแบบ</option>
-                            <option value="in_progress" <?php echo $statusFilter == 'in_progress' ? 'selected' : ''; ?>>กำลังออกแบบ</option>
-                            <option value="customer_review" <?php echo $statusFilter == 'customer_review' ? 'selected' : ''; ?>>ส่งให้ลูกค้าตรวจสอบ</option>
-                            <option value="revision" <?php echo $statusFilter == 'revision' ? 'selected' : ''; ?>>ลูกค้าขอแก้ไข</option>
-                            <option value="approved" <?php echo $statusFilter == 'approved' ? 'selected' : ''; ?>>ลูกค้าอนุมัติแล้ว</option>
-                            <option value="production" <?php echo $statusFilter == 'production' ? 'selected' : ''; ?>>ส่งไปยังระบบผลิต</option>
-                            <option value="completed" <?php echo $statusFilter == 'completed' ? 'selected' : ''; ?>>เสร็จสมบูรณ์</option>
+                            <option value="">ທັງໝົດ</option>
+                            <option value="pending" <?php echo $statusFilter == 'pending' ? 'selected' : ''; ?>>ຖ້າອອກແບບ</option>
+                            <option value="in_progress" <?php echo $statusFilter == 'in_progress' ? 'selected' : ''; ?>>ກຳລັງອອກແບບ</option>
+                            <option value="customer_review" <?php echo $statusFilter == 'customer_review' ? 'selected' : ''; ?>>ສົ່ງໃຫ້ລູກຄ້າກວດແບບ</option>
+                            <option value="revision" <?php echo $statusFilter == 'revision' ? 'selected' : ''; ?>>ລູກຄ້າຂໍແກ້ໄຂ</option>
+                            <option value="approved" <?php echo $statusFilter == 'approved' ? 'selected' : ''; ?>>ລູກຄ້າອະນຸມັດແລ້ວ</option>
+                            <option value="production" <?php echo $statusFilter == 'production' ? 'selected' : ''; ?>>ສົ່ງຕໍ່ໄປທີ່ຄິວວາງຜະລິດ</option>
+                            <option value="completed" <?php echo $statusFilter == 'completed' ? 'selected' : ''; ?>>ສຳເລັດ</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">ดีไซเนอร์:</label>
+                        <label class="form-label">ຜູ້ຮັບຜິດຊອບຄິວ:</label>
                         <select name="designer" class="form-select">
-                            <option value="0">ทั้งหมด</option>
+                            <option value="0">ທັງໝົດ</option>
                             <?php 
                             // รีเซ็ตตัวชี้ตำแหน่งผลลัพธ์
                             $designersResult->data_seek(0);
@@ -221,17 +233,17 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">ค้นหา:</label>
+                        <label class="form-label">ຄົ້ນຫາ:</label>
                         <input type="text" name="search" class="form-control" value="<?php echo htmlspecialchars($searchKeyword); ?>" 
                                placeholder="รหัสคิว, ชื่อลูกค้า, ทีม, รายละเอียด...">
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <div class="d-grid gap-2 w-100">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> ค้นหา
+                                <i class="fas fa-search"></i> ຄົ້ນຫາ
                             </button>
                             <a href="design_queue_list.php" class="btn btn-outline-secondary">
-                                <i class="fas fa-sync"></i> รีเซ็ต
+                                <i class="fas fa-sync"></i> ຍົກເລີກການຄົ້ນຫາ
                             </a>
                         </div>
                     </div>
@@ -268,14 +280,14 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th class="px-3 py-3">รหัสคิว</th>
-                                <th class="px-3 py-3">ลูกค้า/ทีม</th>
-                                <th class="px-3 py-3">รายละเอียด</th>
-                                <th class="px-3 py-3">ดีไซเนอร์</th>
-                                <th class="px-3 py-3">สถานะ</th>
-                                <th class="px-3 py-3">วันที่ต้องการ</th>
-                                <th class="px-3 py-3">อัปเดตล่าสุด</th>
-                                <th class="px-3 py-3">จัดการ</th>
+                                <th class="px-3 py-3">ລະຫັດຄິວ</th>
+                                <th class="px-3 py-3">ລູກຄ້າ/ທີມ</th>
+                                <th class="px-3 py-3">ລາຍລະອຽດ</th>
+                                <th class="px-3 py-3">ຜູ້ຮັບຜິດຮອບຄິວ</th>
+                                <th class="px-3 py-3">ສະຖານະ</th>
+                                <th class="px-3 py-3">ວັນທີຕ້ອງການ</th>
+                                <th class="px-3 py-3">ອັບເດດລ່າສຸດ</th>
+                                <th class="px-3 py-3">ຈັດການ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -298,7 +310,7 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                                     <i class="fas fa-user me-1"></i> <?php echo htmlspecialchars($row['designer_name']); ?>
                                                 </span>
                                             <?php else: ?>
-                                                <span class="badge bg-light text-secondary">ยังไม่กำหนด</span>
+                                                <span class="badge bg-light text-secondary">ຍັງບໍ່ທັນກຳນົດ</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="px-3 py-3">
@@ -318,9 +330,9 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                                 echo date('d/m/Y', strtotime($row['deadline']));
                                                 
                                                 if ($isPast) {
-                                                    echo ' <span class="badge bg-danger">เลยกำหนด ' . $daysRemaining . ' วัน</span>';
+                                                    echo ' <span class="badge bg-danger">ກາຍເວລາ ' . $daysRemaining . ' ວັນ</span>';
                                                 } elseif ($daysRemaining <= 3) {
-                                                    echo ' <span class="badge bg-warning text-dark">อีก ' . $daysRemaining . ' วัน</span>';
+                                                    echo ' <span class="badge bg-warning text-dark">ອີກ ' . $daysRemaining . ' ວັນ</span>';
                                                 }
                                                 ?>
                                             <?php else: ?>
@@ -336,24 +348,24 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                                 
                                                 if ($interval->d == 0) {
                                                     if ($interval->h == 0) {
-                                                        echo $interval->i . ' นาทีที่แล้ว';
+                                                        echo $interval->i . ' ນາທີກ່ອນໜ້ານີ້';
                                                     } else {
-                                                        echo $interval->h . ' ชั่วโมงที่แล้ว';
+                                                        echo $interval->h . ' ຊົ່ວໂມງກ່ອນໜ້ານີ້';
                                                     }
                                                 } elseif ($interval->d == 1) {
-                                                    echo 'เมื่อวาน';
+                                                    echo 'ມື້ວານ';
                                                 } else {
-                                                    echo $interval->d . ' วันที่แล้ว';
+                                                    echo $interval->d . ' ວັນກ່ອນໜ້ານີ້';
                                                 }
                                                 ?>
                                             </span>
                                         </td>
                                         <td class="px-3 py-3">
                                             <div class="btn-group">
-                                                <a href="view_design_queue.php?id=<?php echo $row['design_id']; ?>" class="btn btn-sm btn-primary" title="ดูรายละเอียด">
+                                                <a href="view_design_queue.php?id=<?php echo $row['design_id']; ?>" class="btn btn-sm btn-primary" title="ເບີ່ງລາຍລະອຽດ">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="edit_design_queue.php?id=<?php echo $row['design_id']; ?>" class="btn btn-sm btn-warning" title="แก้ไข">
+                                                <a href="edit_design_queue.php?id=<?php echo $row['design_id']; ?>" class="btn btn-sm btn-warning" title="ແກ້ໄຂ">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-success status-update-btn" 
@@ -361,7 +373,7 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                                         data-bs-target="#updateStatusModal" 
                                                         data-id="<?php echo $row['design_id']; ?>"
                                                         data-status="<?php echo $row['status']; ?>"
-                                                        title="อัปเดตสถานะ">
+                                                        title="ອັບເດດສະຖານະ">
                                                     <i class="fas fa-arrow-right"></i>
                                                 </button>
                                             </div>
@@ -373,14 +385,14 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                     <td colspan="8" class="text-center py-4">
                                         <div class="text-muted">
                                             <i class="fas fa-inbox fa-3x mb-3"></i>
-                                            <p>ไม่พบข้อมูลคิวออกแบบ</p>
+                                            <p>ບໍ່ພົບຂໍ້ມູນຄິວອອກແບບ</p>
                                             <?php if ($statusFilter || $designerFilter || $searchKeyword): ?>
                                                 <a href="design_queue_list.php" class="btn btn-sm btn-outline-primary mt-2">
-                                                    <i class="fas fa-sync"></i> ล้างตัวกรอง
+                                                    <i class="fas fa-sync"></i> ລ້າງຕົວກອງ
                                                 </a>
                                             <?php else: ?>
                                                 <a href="add_design_queue.php" class="btn btn-sm btn-primary mt-2">
-                                                    <i class="fas fa-plus"></i> เพิ่มคิวใหม่
+                                                    <i class="fas fa-plus"></i> ເພີ່ມຄິວໃໝ່
                                                 </a>
                                             <?php endif; ?>
                                         </div>
@@ -399,26 +411,26 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">อัปเดตสถานะคิวออกแบบ</h5>
+                    <h5 class="modal-title">ອັບເດດສະຖານຄິວອອກແບບ</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="update_status.php" method="post">
                     <div class="modal-body">
                         <input type="hidden" name="design_id" id="modal_design_id">
                         <div class="mb-3">
-                            <label class="form-label">เปลี่ยนสถานะเป็น:</label>
+                            <label class="form-label">ປ່ຽນສະຖານນະເປັນ:</label>
                             <select name="new_status" id="new_status" class="form-select" required>
                                 <!-- ตัวเลือกจะถูกเติมด้วย JavaScript -->
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">หมายเหตุ (ถ้ามี):</label>
+                            <label class="form-label">ໝາຍເຫດ (ຖ້າມີ):</label>
                             <textarea name="comment" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ຍົກເລີກ</button>
+                        <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
                     </div>
                 </form>
             </div>
@@ -464,26 +476,26 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
             switch(currentStatus) {
                 case 'pending':
                     return [
-                        { value: 'in_progress', label: 'กำลังออกแบบ' }
+                        { value: 'in_progress', label: 'ກຳລັງອອກແບບ' }
                     ];
                 case 'in_progress':
                     return [
-                        { value: 'customer_review', label: 'ส่งให้ลูกค้าตรวจสอบ' }
+                        { value: 'customer_review', label: 'ສົ່ງໃຫ້ລູກຄ້າກວດແບບ' }
                     ];
                 case 'customer_review':
                     return [
-                        { value: 'revision', label: 'ลูกค้าขอแก้ไข' },
-                        { value: 'approved', label: 'ลูกค้าอนุมัติแล้ว' }
+                        { value: 'revision', label: 'ລູກຄ້າຂໍແກ້ໄຂ' },
+                        { value: 'approved', label: 'ລູກຄ້າອະນຸມັດແລ້ວ' }
                     ];
                 case 'revision':
                     return [
-                        { value: 'in_progress', label: 'กำลังออกแบบ (แก้ไข)' },
-                        { value: 'customer_review', label: 'ส่งให้ลูกค้าตรวจสอบอีกครั้ง' }
+                        { value: 'in_progress', label: 'ກຳລັງອອກແບບ (ແກ້ໄຂ)' },
+                        { value: 'customer_review', label: 'ສົ່ງໃຫ້ລູກຄ້າກວດແບບອີກຄັ້ງ' }
                     ];
                 case 'approved':
                     return [
-                        { value: 'revision', label: 'ลูกค้าขอแก้ไขใหม่' },
-                        { value: 'production', label: 'ส่งไปยังระบบผลิต' }
+                        { value: 'revision', label: 'ລູກຄ້າຂໍແກ້ໄຂใหม่' },
+                        { value: 'production', label: 'ສົ່ງໄປທີ່ຄິວຜະລິດ' }
                     ];
                 case 'production':
                     return [
@@ -496,13 +508,13 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                     ];
                 default:
                     return [
-                        { value: 'pending', label: 'รอออกแบบ' },
-                        { value: 'in_progress', label: 'กำลังออกแบบ' },
-                        { value: 'customer_review', label: 'ส่งให้ลูกค้าตรวจสอบ' },
-                        { value: 'revision', label: 'ลูกค้าขอแก้ไข' },
-                        { value: 'approved', label: 'ลูกค้าอนุมัติแล้ว' },
-                        { value: 'production', label: 'ส่งไปยังระบบผลิต' },
-                        { value: 'completed', label: 'เสร็จสมบูรณ์' }
+                        { value: 'pending', label: 'ຖ້າອອກແບບ' },
+                        { value: 'in_progress', label: 'ກຳລັງອອກແບບ' },
+                        { value: 'customer_review', label: 'ສົ່ງໃຫ້ລູກຄ້າກວດແບບ' },
+                        { value: 'revision', label: 'ລູກຄ້າຂໍແກ້ໄຂ' },
+                        { value: 'approved', label: 'ລູກຄ້າອະນຸມັດແລ້ວ' },
+                        { value: 'production', label: 'ສົ່ງໄປທີ່ຄິວຜະລິດ' },
+                        { value: 'completed', label: 'ສຳເລັດ' }
                     ];
             }
         }

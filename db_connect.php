@@ -86,7 +86,7 @@ function validateFile($file) {
     if ($file['size'] > 10 * 1024 * 1024) {
         return [
             'valid' => false,
-            'message' => 'ขนาดไฟล์เกิน 10MB ไม่อนุญาตให้อัปโหลด'
+            'message' => 'ຂະໜາດໄຟລ໌ເກິນ 10MB ບໍ່ສາມາດອະນຸມັດໃຫ້ເອົາໃຊ້'
         ];
     }
     
@@ -98,7 +98,7 @@ function validateFile($file) {
     if (!in_array($fileExt, $allowedExts)) {
         return [
             'valid' => false,
-            'message' => 'ประเภทไฟล์ไม่ได้รับอนุญาต เฉพาะ JPG, PNG, GIF, PDF, ZIP, AI, PSD และ SVG เท่านั้น'
+            'message' => 'ບໍ່ອະນຸຍາດປະເພດໄຟລ໌: ສະເພາະ JPG, PNG, GIF, PDF, ZIP, AI, PSD, ແລະ SVG.'
         ];
     }
     
@@ -113,8 +113,8 @@ function formatThaiDate($date) {
     if (empty($date)) return '-';
     
     $thaiMonths = [
-        1 => 'ມັງກອນ', 'ກຸມພາ', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-        'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+        1 => 'ມັງກອນ', 'ກຸມພາ', 'ມີນາ', 'ເມສາ', 'ພຶດສະພາ', 'ມິຖຸນາ',
+        'ກໍລະກົດ', 'ສິງຫາ', 'ກັນຍາ', 'ຕຸລາ', 'ພະຈິກ', 'ທັນວາ',
     ];
     
     $timestamp = strtotime($date);

@@ -76,7 +76,7 @@ switch ($oldStatus) {
 }
 
 if (!$validTransition) {
-    $_SESSION['error_message'] = "ไม่สามารถเปลี่ยนสถานะจาก " . getStatusThai($oldStatus) . " เป็น " . getStatusThai($newStatus) . " ได้";
+    $_SESSION['error_message'] = "ບໍ່ສາມາດປ່ຽນສະຖານະຈາກ " . getStatusThai($oldStatus) . " ເປັນ " . getStatusThai($newStatus) . " ໄດ້";
     header("Location: view_design_queue.php?id=$designId");
     exit();
 }
@@ -91,12 +91,12 @@ if ($conn->query($updateSql) === TRUE) {
                   VALUES ($designId, '$oldStatus', '$newStatus', $user_id, '$comment')";
     
     if ($conn->query($historySql) === TRUE) {
-        $_SESSION['success_message'] = "อัปเดตสถานะเป็น " . getStatusThai($newStatus) . " เรียบร้อยแล้ว";
+        $_SESSION['success_message'] = "ອັບເດດເປັນສະຖານະ: " . getStatusThai($newStatus) . " ແລ້ວ";
     } else {
         $_SESSION['error_message'] = "อัปเดตสถานะสำเร็จ แต่ไม่สามารถบันทึกประวัติได้: " . $conn->error;
     }
 } else {
-    $_SESSION['error_message'] = "ไม่สามารถอัปเดตสถานะได้: " . $conn->error;
+    $_SESSION['error_message'] = "ບໍ່ສາມາດອັບເດດສະຖານະໄດ້: " . $conn->error;
 }
 
 // กลับไปยังหน้าก่อนหน้า

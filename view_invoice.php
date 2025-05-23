@@ -157,8 +157,8 @@ if (!empty($invoice['order_id'])) {
                     <button class="btn btn-primary" onclick="window.print()">
                         <i class="fas fa-print"></i> ພິມ
                     </button>
-                    <button class="btn btn-success" id="exportPdfBtn">
-                        <i class="fas fa-file-pdf"></i> ບັນທຶກເປັນ PDF
+                    <button class="btn btn-success" id="exportJpgBtn">
+                        <i class=""fas fa-file-image"></i> ບັນທຶກເປັນ JPG
                     </button>
                     <a href="edit_invoice.php?id=<?php echo $invoiceId; ?>" class="btn btn-warning">
                         <i class="fas fa-edit"></i> ແກ້ໄຂ
@@ -364,35 +364,35 @@ if (!empty($invoice['order_id'])) {
             </div>
         </div>
     </div>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <script>
-        $(document).ready(function() {
-            // Export to PDF
-            $('#exportPdfBtn').click(function() {
-                const { jsPDF } = window.jspdf;
-                
-                const invoice = document.getElementById('invoiceContent');
-                
-                html2canvas(invoice, {
-                    scale: 2
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const imgProps = pdf.getImageProperties(imgData);
-                    
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save('invoice-<?php echo $invoice['invoice_no']; ?>.pdf');
-                });
+  <script>
+    $(document).ready(function() {
+        // Export to JPG
+        $('#exportJpgBtn').click(function() {
+            const invoice = document.getElementById('invoiceContent');
+
+            html2canvas(invoice, {
+                scale: 2
+            }).then(canvas => {
+                // แปลง canvas เป็น data URL (JPG)
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+                // สร้างลิงก์ดาวน์โหลด
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = 'invoice-<?php echo $invoice['invoice_no']; ?>.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>

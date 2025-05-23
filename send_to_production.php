@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $required_fields = ['design_id', 'factory_id', 'product_details', 'expected_completion_date', 'production_cost', 'confirm_files'];
 foreach ($required_fields as $field) {
     if (!isset($_POST[$field]) || empty($_POST[$field])) {
-        $_SESSION['error_message'] = "กรุณากรอกข้อมูลให้ครบถ้วน";
+        $_SESSION['error_message'] = "ກະລຸນາກຸ່ມຂໍ້ມູນໃຫ້ຄົບຖ້ວນ";
         header("Location: prepare_production.php?id=" . $_POST['design_id']);
         exit();
     }
@@ -36,7 +36,7 @@ $checkQuery = "SELECT * FROM design_queue WHERE design_id = $designId AND status
 $checkResult = $conn->query($checkQuery);
 
 if ($checkResult->num_rows === 0) {
-    $_SESSION['error_message'] = "ไม่พบคิวออกแบบที่อนุมัติแล้ว";
+    $_SESSION['error_message'] = "ບໍ່ພົບຄິວອອກແບບທີ່ອະນຸມັດແລ້ວ";
     header("Location: design_queue_list.php");
     exit();
 }
@@ -49,68 +49,108 @@ $fileResult = $conn->query($fileQuery);
 $fileRow = $fileResult->fetch_assoc();
 
 if ($fileRow['file_count'] === '0') {
-    $_SESSION['error_message'] = "ไม่พบไฟล์สุดท้ายสำหรับส่งผลิต กรุณาอัปโหลดไฟล์ก่อน";
+    $_SESSION['error_message'] = "ບໍ່ພົບໄຟລ໌ສຸດທ້າຍສຳລັບການຜະລິດ ກະລຸນາອັບໂຫລດໄຟລ໌ກ່ອນ";
     header("Location: prepare_production.php?id=$designId");
     exit();
 }
 
-// เตรียมข้อมูลสำหรับเชื่อมต่อกับระบบผลิตในอนาคต
-// ในตัวอย่างนี้เราจะสร้างตารางมาใหม่เพื่อใช้ในระบบผลิต (ถ้ายังไม่มี)
+// สร้างตาราง production_orders ถ้ายังไม่มี
 $createProductionTableSql = "CREATE TABLE IF NOT EXISTS production_orders (
     production_id INT AUTO_INCREMENT PRIMARY KEY,
     design_id INT NOT NULL,
     factory_id INT NOT NULL,
     product_details TEXT NOT NULL,
-    production_cost DECIMAL(10,2) NOT NULL,
+    production_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     expected_completion_date DATE NOT NULL,
+    actual_completion_date DATE NULL,
     production_notes TEXT NULL,
-    status ENUM('pending', 'in_progress', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    status ENUM('pending', 'sent', 'in_progress', 'ready_pickup', 'received', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (design_id) REFERENCES design_queue(design_id) ON DELETE CASCADE
+    FOREIGN KEY (design_id) REFERENCES design_queue(design_id) ON DELETE CASCADE,
+    INDEX idx_status (status),
+    INDEX idx_factory (factory_id),
+    INDEX idx_completion_date (expected_completion_date)
 )";
 
 if ($conn->query($createProductionTableSql) !== TRUE) {
-    $_SESSION['error_message'] = "เกิดข้อผิดพลาดในการสร้างตารางข้อมูลการผลิต: " . $conn->error;
+    $_SESSION['error_message'] = "ເກີດຂໍ້ຜິດພາດໃນການສ້າງຕາລາງຂໍ້ມູນການຜະລິດ: " . $conn->error;
     header("Location: prepare_production.php?id=$designId");
     exit();
 }
 
-// เพิ่มข้อมูลลงในตารางการผลิต
-$insertProductionSql = "INSERT INTO production_orders (
-    design_id, factory_id, product_details, production_cost, 
-    expected_completion_date, production_notes
-) VALUES (
-    $designId, $factoryId, '$productDetails', $productionCost, 
-    '$expectedCompletionDate', '$productionNotes'
-)";
+// เริ่ม transaction
+$conn->begin_transaction();
 
-if ($conn->query($insertProductionSql) === TRUE) {
+try {
+    // เพิ่มข้อมูลลงในตารางการผลิต
+    $insertProductionSql = "INSERT INTO production_orders (
+        design_id, factory_id, product_details, production_cost, 
+        expected_completion_date, production_notes
+    ) VALUES (
+        $designId, $factoryId, '$productDetails', $productionCost, 
+        '$expectedCompletionDate', '$productionNotes'
+    )";
+
+    if (!$conn->query($insertProductionSql)) {
+        throw new Exception("ไม่สามารถสร้างรายการผลิตได้: " . $conn->error);
+    }
+    
     $productionId = $conn->insert_id;
     
-    // บันทึกประวัติการส่งผลิต
+    // อัปเดตสถานะคิวออกแบบเป็น 'production'
+    $updateDesignSql = "UPDATE design_queue SET status = 'production', updated_at = NOW() WHERE design_id = $designId";
+    if (!$conn->query($updateDesignSql)) {
+        throw new Exception("ไม่สามารถอัปเดตสถานะคิวได้: " . $conn->error);
+    }
+    
+    // บันทึกประวัติการส่งผลิตในคิวออกแบบ
     $oldStatus = 'approved';
     $newStatus = 'production';
     $user_id = $_SESSION['user_id'];
-    $comment = "ส่งไปยังระบบผลิตเรียบร้อยแล้ว (หมายเลขการผลิต: $productionId)";
+    $comment = "ສົ່ງໄປຍັງລະບົບການຜະລິດເຮີບຮ້ອຍແລ້ວ (ໝາຍເລກການຜະລິດ: $productionId)";
     
-    $historySql = "INSERT INTO status_history (design_id, old_status, new_status, changed_by, comment) 
-                   VALUES ($designId, '$oldStatus', '$newStatus', $user_id, '$comment')";
-    $conn->query($historySql);
+    $designHistorySql = "INSERT INTO status_history (design_id, old_status, new_status, changed_by, comment) 
+                        VALUES ($designId, '$oldStatus', '$newStatus', $user_id, '$comment')";
     
-    // อัปเดตสถานะคิว
-    $updateSql = "UPDATE design_queue SET status = 'production', updated_at = NOW() WHERE design_id = $designId";
-    if ($conn->query($updateSql) === TRUE) {
-        $_SESSION['success_message'] = "ส่งคิวออกแบบไปยังระบบผลิตเรียบร้อยแล้ว (หมายเลขการผลิต: $productionId)";
-        header("Location: design_queue_list.php");
-        exit();
-    } else {
-        $_SESSION['error_message'] = "ไม่สามารถอัปเดตสถานะคิวได้: " . $conn->error;
-        header("Location: prepare_production.php?id=$designId");
-        exit();
+    if (!$conn->query($designHistorySql)) {
+        throw new Exception("ไม่สามารถบันทึกประวัติคิวออกแบบได้: " . $conn->error);
     }
-} else {
-    $_SESSION['error_message'] = "ไม่สามารถสร้างรายการผลิตได้: " . $conn->error;
+    
+    // สร้างตาราง production_status_history ถ้ายังไม่มี
+    $createHistoryTableSql = "CREATE TABLE IF NOT EXISTS production_status_history (
+        history_id INT AUTO_INCREMENT PRIMARY KEY,
+        production_id INT NOT NULL,
+        old_status VARCHAR(50) NOT NULL,
+        new_status VARCHAR(50) NOT NULL,
+        changed_by INT NOT NULL,
+        change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        notes TEXT NULL,
+        actual_completion_date DATE NULL,
+        FOREIGN KEY (production_id) REFERENCES production_orders(production_id) ON DELETE CASCADE,
+        FOREIGN KEY (changed_by) REFERENCES users(user_id),
+        INDEX idx_production_id (production_id),
+        INDEX idx_change_date (change_date)
+    )";
+    
+    $conn->query($createHistoryTableSql);
+    
+    // บันทึกประวัติการสร้างรายการผลิต
+    $productionHistorySql = "INSERT INTO production_status_history 
+                            (production_id, old_status, new_status, changed_by, notes) 
+                            VALUES ($productionId, '', 'pending', $user_id, 'ສ້າງລາຍການຜະລິດໃໝ່ຈາກຄິວອອກແບບ')";
+    
+    $conn->query($productionHistorySql);
+    
+    $conn->commit();
+    
+    $_SESSION['success_message'] = "ສົ່ງຄິວອອກແບບໄປຍັງລະບົບການຜະລິດເຮີບຮ້ອຍແລ້ວ (ໝາຍເລກການຜະລິດ: $productionId)";
+    header("Location: view_production.php?id=$productionId");
+    exit();
+    
+} catch (Exception $e) {
+    $conn->rollback();
+    $_SESSION['error_message'] = "ເກີດຂໍ້ຜິດພາດ: " . $e->getMessage();
     header("Location: prepare_production.php?id=$designId");
     exit();
 }

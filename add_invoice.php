@@ -267,24 +267,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="text" class="form-control unit-price" readonly>
                                 </div>
                             </div>
-                            
                             <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input option-checkbox" type="checkbox" name="has_long_sleeve[]" id="longSleeve0">
-                                        <label class="form-check-label" for="longSleeve0">ແຂນຍາວ (+20,000₭)</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input option-checkbox" type="checkbox" name="has_collar[]" id="collar0">
-                                        <label class="form-check-label" for="collar0">ຄໍປົກ (+20,000₭)</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">ຄ່າໃຊ້ຈ່າຍເພີ່ມເຕີມອື່ນໆ</label>
-                                    <input type="number" class="form-control additional-cost" name="additional_costs[]" value="0">
-                                </div>
-                            </div>
-                            
+    <div class="col-md-6">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input option-checkbox" type="checkbox" name="has_long_sleeve[]" id="longSleeve{index}">
+            <label class="form-check-label" for="longSleeve{index}">ແຂນຍາວ (+20,000₭)</label>
+            <input type="number" class="form-control form-control-sm ms-2 long-sleeve-qty" 
+                  name="long_sleeve_qty[]" min="0" value="0" style="width: 80px;">
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input option-checkbox" type="checkbox" name="has_collar[]" id="collar{index}">
+            <label class="form-check-label" for="collar{index}">ຄໍປົກ (+20,000₭)</label>
+            <input type="number" class="form-control form-control-sm ms-2 collar-qty" 
+                  name="collar_qty[]" min="0" value="0" style="width: 80px;">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">ຄ່າໃຊ້ຈ່າຍເພີ່ມເຕີມອື່ນໆ</label>
+        <input type="number" class="form-control additional-cost" name="additional_costs[]" value="0">
+    </div>
+</div>
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <label class="form-label">ຈຳນວນຕາມຂະໜາດ (ຜົນລວມຕ້ອງເທົ່າກັບຈຳນວນລວມ)</label>
@@ -598,11 +600,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             row.find('.unit-price').val(numberWithCommas(price) + ' ₭');
             calculateItemTotal(row);
         });
-        
-        $('.quantity-input, .size-input, .special-size, .additional-cost').off('change keyup').on('change keyup', function() {
-            const row = $(this).closest('.item-row');
-            calculateItemTotal(row);
-        });
+        $('.quantity-input, .size-input, .special-size, .additional-cost, .long-sleeve-qty, .collar-qty').off('change keyup').on('change keyup', function() {
+    const row = $(this).closest('.item-row');
+    calculateItemTotal(row);
+});
 
         // Special handling for option checkboxes
         $('.option-checkbox').off('change').on('change', function() {
@@ -615,50 +616,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             calculateTotals();
         });
     }
+    // Calculate item total (modify this function)
+function calculateItemTotal(row) {
+    const fabricPrice = parseFloat(row.find('.fabric-select').find(':selected').data('price') || 0);
+    const quantity = parseInt(row.find('.quantity-input').val() || 0);
+    const additionalCost = parseFloat(row.find('.additional-cost').val() || 0);
     
-    // Calculate item total
-    function calculateItemTotal(row) {
-        const fabricPrice = parseFloat(row.find('.fabric-select').find(':selected').data('price') || 0);
-        const quantity = parseInt(row.find('.quantity-input').val() || 0);
-        const additionalCost = parseFloat(row.find('.additional-cost').val() || 0);
-        
-        // Calculate special sizes cost
-        let specialSizesCost = 0;
-        const size3xl = parseInt(row.find('[name="size_3xl[]"]').val() || 0);
-        const size4xl = parseInt(row.find('[name="size_4xl[]"]').val() || 0);
-        const size5xl = parseInt(row.find('[name="size_5xl[]"]').val() || 0);
-        const size6xl = parseInt(row.find('[name="size_6xl[]"]').val() || 0);
-        
-        specialSizesCost += size3xl * 20000;
-        specialSizesCost += size4xl * 25000;
-        specialSizesCost += size5xl * 35000;
-        specialSizesCost += size6xl * 35000;
-        
-        // Check if long sleeve option is selected
-        let optionsCost = 0;
-        const hasLongSleeve = row.find('[name="has_long_sleeve[]"]').is(':checked');
-        const hasCollar = row.find('[name="has_collar[]"]').is(':checked');
-        
-        if (hasLongSleeve) {
-            optionsCost += quantity * 20000;
-        }
-        
-        // Check if collar option is selected
-        if (hasCollar) {
-            optionsCost += quantity * 20000;
-        }
-        
-        // Calculate total
-        const total = (fabricPrice * quantity) + additionalCost + specialSizesCost + optionsCost;
-        row.find('.item-total').val(total);
-        
-        // ยังคงแสดงข้อความว่าได้รับเสื้อฟรีกี่ตัว แต่ไม่นำไปคำนวณส่วนลด
-        const freeItems = Math.floor(quantity / 12);
-        row.find('.free-items-text').text(`ສັ່ງ 12 ແຖມ 1 (ໄດ້ຮັບຟຣີ ${freeItems} ຜືນ)`);
-        
-        calculateTotals();
+    // Calculate special sizes cost
+    let specialSizesCost = 0;
+    const size3xl = parseInt(row.find('[name="size_3xl[]"]').val() || 0);
+    const size4xl = parseInt(row.find('[name="size_4xl[]"]').val() || 0);
+    const size5xl = parseInt(row.find('[name="size_5xl[]"]').val() || 0);
+    const size6xl = parseInt(row.find('[name="size_6xl[]"]').val() || 0);
+    
+    specialSizesCost += size3xl * 20000;
+    specialSizesCost += size4xl * 25000;
+    specialSizesCost += size5xl * 35000;
+    specialSizesCost += size6xl * 35000;
+    
+    // Check if long sleeve option is selected and get quantity
+    let optionsCost = 0;
+    if (row.find('[name="has_long_sleeve[]"]').is(':checked')) {
+        const longSleeveQty = parseInt(row.find('.long-sleeve-qty').val() || 0);
+        optionsCost += longSleeveQty * 20000;
     }
     
+    // Check if collar option is selected and get quantity
+    if (row.find('[name="has_collar[]"]').is(':checked')) {
+        const collarQty = parseInt(row.find('.collar-qty').val() || 0);
+        optionsCost += collarQty * 20000;
+    }
+    
+    // Calculate total
+    const total = (fabricPrice * quantity) + additionalCost + specialSizesCost + optionsCost;
+    row.find('.item-total').val(total);
+    
+    // Update free items text
+    const freeItems = Math.floor(quantity / 12);
+    row.find('.free-items-text').text(`ສັ່ງ 12 ແຖມ 1 (ໄດ້ຮັບຟຣີ ${freeItems} ຜືນ)`);
+    
+    calculateTotals();
+}
     // Calculate all totals
     function calculateTotals() {
         let subtotal = 0;

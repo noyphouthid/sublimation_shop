@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // บันทึกประวัติสถานะ
         $user_id = $_SESSION['user_id'];
         $statusSql = "INSERT INTO status_history (design_id, old_status, new_status, changed_by, comment) 
-                     VALUES ($designId, NULL, 'pending', $user_id, 'สร้างคิวใหม่')";
+                     VALUES ($designId, NULL, 'pending', $user_id, 'ສ້າງຄິວໃໝ່')";
         $conn->query($statusSql);
         
         // อัปโหลดไฟล์ (ถ้ามี)
@@ -77,81 +77,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // แสดงข้อความสำเร็จและเปลี่ยนเส้นทาง
-        $_SESSION['success_message'] = "เพิ่มคิวออกแบบใหม่เรียบร้อยแล้ว (รหัสคิว: $queueCode)";
+        $_SESSION['success_message'] = "ເພີ່ມຄິວອອກແບບໃໝ່ສຳເລັດແລ້ວ (ລະຫັດຄິວ: $queueCode)";
         header("Location: design_queue_list.php");
         exit();
     } else {
-        $error_message = "เกิดข้อผิดพลาด: " . $conn->error;
+        $error_message = "ເກີດຂໍ້ຜິດພາດ: " . $conn->error;
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
-    <meta charset="UTF-8">
+       <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เพิ่มคิวออกแบบใหม่ - ระบบคิวออกแบบ</title>
+    <title>ລະບົບເຂົ້າຄິວອອກແບບ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        @font-face {
+            font-family: 'Saysettha OT';
+            src: url('assets/fonts/saysettha-ot.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, option, label, span, div {
+            font-family: 'Saysettha OT', sans-serif !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.php">
-                <i class="fas fa-tshirt me-2"></i> ระบบบริหารร้านเสื้อพิมพ์ลาย
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="design_queue_list.php">
-                            <i class="fas fa-list-ul"></i> คิวออกแบบ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-shopping-cart"></i> คำสั่งซื้อ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-industry"></i> การผลิต
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-chart-line"></i> รายงาน
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> <?php echo $_SESSION['full_name']; ?>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><span class="dropdown-item-text text-muted small"><?php echo ucfirst($_SESSION['role']); ?></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ตั้งค่าบัญชี</a></li>
-                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+  
+       <?php include_once 'navbar.php'; ?>
+
+   
 
     <div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-2xl font-bold">เพิ่มคิวออกแบบใหม่</h1>
+            <h1 class="text-2xl font-bold">ເພີ່ມຄິວອອກແບບໃໝ່</h1>
             <a href="design_queue_list.php" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> กลับไปหน้ารายการ
+                <i class="fas fa-arrow-left"></i> ກັບໄປໜ້າລາຍການ
             </a>
         </div>
 
@@ -167,58 +135,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                         <!-- ข้อมูลลูกค้า -->
                         <div class="col-md-6 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ข้อมูลลูกค้า</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ຂໍ້ມູນລູກຄ້າ</h3>
                             
                             <div class="mb-3">
-                                <label for="customer_name" class="form-label required">ชื่อลูกค้า/ทีม</label>
+                                <label for="customer_name" class="form-label required">ຊື່ລູກຄ້າ/ທີມ</label>
                                 <input type="text" class="form-control" id="customer_name" name="customer_name" required>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="customer_phone" class="form-label">เบอร์โทรศัพท์</label>
+                                <label for="customer_phone" class="form-label">ເບີໂທລະສັບ</label>
                                 <input type="text" class="form-control" id="customer_phone" name="customer_phone">
                             </div>
                             
                             <div class="mb-3">
-                                <label for="customer_contact" class="form-label">ช่องทางติดต่ออื่นๆ</label>
+                                <label for="customer_contact" class="form-label">ຊ່ອງທາງຕິດຕໍ່ອື່ນໆ</label>
                                 <input type="text" class="form-control" id="customer_contact" name="customer_contact" 
-                                       placeholder="LINE ID, Facebook, Email, ฯลฯ">
+                                       placeholder="WhatsApp, Facebook, Email, ອື່ນໆ">
                             </div>
                             
                             <div class="mb-3">
-                                <label for="team_name" class="form-label">ชื่อทีม (ถ้ามี)</label>
+                                <label for="team_name" class="form-label">ຊື່ທີມ (ຖ້າມີ)</label>
                                 <input type="text" class="form-control" id="team_name" name="team_name">
                             </div>
                         </div>
 
                         <!-- รายละเอียดการออกแบบ -->
                         <div class="col-md-6 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">รายละเอียดการออกแบบ</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ລາຍລະອຽດການອອກແບບ</h3>
                             
                             <div class="mb-3">
-                                <label for="design_type" class="form-label">ประเภทของการออกแบบ</label>
+                                <label for="design_type" class="form-label">ປະເພດຂອງການອອກແບບ</label>
                                 <select class="form-select" id="design_type" name="design_type">
-                                    <option value="">-- เลือกประเภท --</option>
-                                    <option value="เสื้อกีฬา">เสื้อกีฬา</option>
-                                    <option value="เสื้อคลาส/รุ่น">เสื้อคลาส/รุ่น</option>
-                                    <option value="เสื้อทีม">เสื้อทีม</option>
-                                    <option value="เสื้อบริษัท/องค์กร">เสื้อบริษัท/องค์กร</option>
-                                    <option value="เสื้อกิจกรรม">เสื้อกิจกรรม</option>
-                                    <option value="อื่นๆ">อื่นๆ</option>
+                                    <option value="">-- ເລືອກປະເພດ --</option>
+                                    <option value="ເສື້ອກິລາ">ເສື້ອກິລາ</option>
+                                    <option value="ເສື້ອຮຽນ/ຮຸ່ນ">ເສື້ອທີມງານ</option>
+                                    <option value="ເສື້ອຮຽນ/ຮຸ່ນ">ເສື້ອອື່ນໆ</option>
+
                                 </select>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="shirt_color" class="form-label">สีเสื้อ</label>
+                                <label for="shirt_color" class="form-label">ສີເສື້ອ</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-palette"></i></span>
                                     <input type="text" class="form-control" id="shirt_color" name="shirt_color" 
-                                           placeholder="เช่น ขาว, ดำ, น้ำเงินเข้ม">
+                                           placeholder="ເຊັ່ນ: ຂາວ, ດຳ, ຟ້າເຂັ້ມ">
                                 </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="deadline" class="form-label">วันที่ต้องการงาน</label>
+                                <label for="deadline" class="form-label">ວັນທີ່ຕ້ອງການ</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                     <input type="date" class="form-control" id="deadline" name="deadline" 
@@ -227,9 +193,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             
                             <div class="mb-3">
-                                <label for="designer_id" class="form-label">มอบหมายให้ดีไซเนอร์</label>
+                                <label for="designer_id" class="form-label">ມອບໝາຍໃຫ້ນັກອອກແບບ</label>
                                 <select class="form-select" id="designer_id" name="designer_id">
-                                    <option value="">-- ยังไม่กำหนด --</option>
+                                    <option value="">-- ຍັງບໍ່ໄດ້ກຳນົດ --</option>
                                     <?php while ($designer = $designersResult->fetch_assoc()): ?>
                                         <option value="<?php echo $designer['user_id']; ?>">
                                             <?php echo $designer['full_name']; ?>
@@ -241,25 +207,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <!-- รายละเอียดเพิ่มเติม -->
                         <div class="col-12 mb-4">
-                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">รายละเอียดเพิ่มเติม</h3>
+                            <h3 class="text-lg font-semibold mb-3 border-bottom pb-2">ລາຍລະອຽດເພີ່ມເຕີມ</h3>
                             
                             <div class="mb-3">
-                                <label for="design_details" class="form-label required">รายละเอียดการออกแบบ</label>
+                                <label for="design_details" class="form-label required">ລາຍລະອຽດການອອກແບບ</label>
                                 <textarea class="form-control" id="design_details" name="design_details" rows="5" required
-                                          placeholder="ระบุรายละเอียดการออกแบบ เช่น โลโก้, สี, ฟอนต์, ข้อความ, แนวคิดการออกแบบ ฯลฯ"></textarea>
+                                          placeholder="ລະບຸລາຍລະອຽດການອອກແບບ ເຊັ່ນ ໂລໂກ້, ສີ, ຟອນ, ຂໍ້ຄວາມ, ແນວຄິດການອອກແບບ ອື່ນໆ"></textarea>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="notes" class="form-label">บันทึกเพิ่มเติม</label>
+                                <label for="notes" class="form-label">ບັນທຶກເພີ່ມເຕີມ</label>
                                 <textarea class="form-control" id="notes" name="notes" rows="3"
-                                          placeholder="บันทึกเพิ่มเติมอื่นๆ ที่ต้องการแจ้งให้ทีมออกแบบทราบ"></textarea>
+                                          placeholder="ບັນທຶກເພີ່ມເຕີມອື່ນໆ ທີ່ຕ້ອງການແຈ້ງໃຫ້ທີມອອກແບບຮູ້"></textarea>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="reference_files" class="form-label">ไฟล์อ้างอิง (รูปภาพ, โลโก้, ฯลฯ)</label>
+                                <label for="reference_files" class="form-label">ໄຟລ໌ອ້າງອີງ (ຮູບພາບ, ໂລໂກ້, ອື່ນໆ)</label>
                                 <input type="file" class="form-control" id="reference_files" name="reference_files[]" multiple>
                                 <div class="form-text">
-                                    <i class="fas fa-info-circle"></i> ไฟล์ที่อนุญาต: รูปภาพ (JPG, PNG, GIF), ไฟล์ PDF, AI, PSD, SVG, ไฟล์ ZIP ขนาดไม่เกิน 10MB ต่อไฟล์
+                                    <i class="fas fa-info-circle"></i> ໄຟລ໌ທີ່ອະນຸຍາດ: ຮູບພາບ (JPG, PNG, GIF), ໄຟລ໌ PDF, AI, PSD, SVG, ໄຟລ໌ ZIP ຂະໜາດບໍ່ເກີນ 10MB ຕໍ່ໄຟລ໌
                                 </div>
                             </div>
                         </div>
@@ -267,10 +233,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-save"></i> บันทึกคิวออกแบบ
+                            <i class="fas fa-save"></i> ບັນທຶກຄິວອອກແບບ
                         </button>
                         <a href="design_queue_list.php" class="btn btn-outline-secondary btn-lg ms-2">
-                            <i class="fas fa-times"></i> ยกเลิก
+                            <i class="fas fa-times"></i> ຍົກເລີກ
                         </a>
                     </div>
                 </form>
@@ -287,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ตรวจสอบว่ามีไฟล์ที่เลือกหรือไม่
             if (this.files.length > 0) {
                 // แสดงจำนวนไฟล์ที่เลือก
-                console.log(`เลือก ${this.files.length} ไฟล์`);
+                console.log(`ເລືອກ ${this.files.length} ໄຟລ໌`);
                 
                 // ตรวจสอบขนาดไฟล์
                 for (let i = 0; i < this.files.length; i++) {
@@ -295,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     const fileSize = file.size / 1024 / 1024; // แปลงเป็น MB
                     
                     if (fileSize > 10) {
-                        alert(`ไฟล์ "${file.name}" มีขนาดใหญ่เกินไป (${fileSize.toFixed(2)} MB). ขนาดไฟล์สูงสุดที่อนุญาตคือ 10 MB.`);
+                        alert(`ໄຟລ໌ "${file.name}" ມີຂະໜາດໃຫຍ່ເກີນໄປ (${fileSize.toFixed(2)} MB). ຂະໜາດໄຟລ໌ສູງສຸດທີ່ອະນຸຍາດແມ່ນ 10 MB.`);
                         this.value = ''; // ล้างการเลือกไฟล์
                         break;
                     }

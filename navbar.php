@@ -2,6 +2,9 @@
 // ตรวจสอบว่ามีการล็อกอินไว้หรือไม่
 $isLoggedIn = isset($_SESSION['user_id']);
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+// Debug - ลบบรรทัดนี้หลังจากแก้ไขเสร็จ
+echo "<!-- Debug: navbar.php loaded, isLoggedIn = " . ($isLoggedIn ? "true" : "false") . " -->";
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -17,7 +20,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link <?php echo strpos($currentPage, 'design_queue') !== false ? 'active' : ''; ?>" href="design_queue_list.php">
-                            <i class="fas fa-list-ul"></i> ຄິວອອກແບບ
+                            <i class="fas fa-paint-brush"></i> ຈັດອອກແບບ
                         </a>
                     </li>
                     <li class="nav-item">
@@ -31,8 +34,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo strpos($currentPage, 'production') !== false ? 'active' : ''; ?>" href="#">
-                            <i class="fas fa-industry"></i> ການຜະລິດ
+                        <a class="nav-link <?php echo strpos($currentPage, 'production') !== false ? 'active' : ''; ?>" href="production_dashboard.php">
+                            <i class="fas fa-industry"></i> ຕາມຜະລິດ
                         </a>
                     </li>
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
@@ -46,12 +49,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <div class="d-flex">
                     <div class="dropdown">
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> <?php echo $_SESSION['full_name']; ?>
+                            <i class="fas fa-user-circle me-1"></i> <?php echo isset($_SESSION['full_name']) ? $_SESSION['full_name'] : 'User'; ?>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><span class="dropdown-item-text text-muted small"><?php echo ucfirst($_SESSION['role']); ?></span></li>
+                            <li><span class="dropdown-item-text text-muted small"><?php echo isset($_SESSION['role']) ? ucfirst($_SESSION['role']) : 'Guest'; ?></span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ຕັ້ງຄ່າບັນຊີ</a></li>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> ແອດມິນ</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            <?php endif; ?>
                             <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ອອກຈາກລະບົບ</a></li>
                         </ul>
                     </div>

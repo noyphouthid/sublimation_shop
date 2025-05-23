@@ -57,14 +57,13 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ລະບົບຈັດການຄິວອອກແບບ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -82,53 +81,9 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
     </style>
 </head>
 <body class="bg-gray-100">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.php">
-                <i class="fas fa-tshirt me-2"></i> ລະບົບຈັດການຄິວອອກແບບ
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="design_queue_list.php">
-                            <i class="fas fa-list-ul"></i> ຄິວອອກແບບ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-shopping-cart"></i> ຄຳສັ່ງຊື້
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-industry"></i> ການຜະລິດ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-chart-line"></i> ລາຍງານ
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> <?php echo $_SESSION['full_name']; ?>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><span class="dropdown-item-text text-muted small"><?php echo ucfirst($_SESSION['role']); ?></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> ອອກຈາກລະບົບ</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+    <?php include_once 'navbar.php'; ?>
+    
+    <!-- เนื้อหาที่เหลือ -->
     <div class="container my-4">
         <!-- สรุปสถิติคิวด่วน -->
         <div class="row mb-4">
@@ -235,7 +190,7 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                     <div class="col-md-4">
                         <label class="form-label">ຄົ້ນຫາ:</label>
                         <input type="text" name="search" class="form-control" value="<?php echo htmlspecialchars($searchKeyword); ?>" 
-                               placeholder="รหัสคิว, ชื่อลูกค้า, ทีม, รายละเอียด...">
+                               placeholder="ລະຫັດຄິວ, ຊື່ລູກຄ້າ, ທີມ, ລາຍລະອຽດ...">
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <div class="d-grid gap-2 w-100">
@@ -376,6 +331,15 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                                                         title="ອັບເດດສະຖານະ">
                                                     <i class="fas fa-arrow-right"></i>
                                                 </button>
+                                                <!-- เพิ่มปุ่มลบที่นี่ -->
+                                                <button type="button" class="btn btn-sm btn-danger delete-queue-btn" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#deleteQueueModal" 
+                                                        data-id="<?php echo $row['design_id']; ?>"
+                                                        data-code="<?php echo $row['queue_code']; ?>"
+                                                        title="ລຶບຄິວ">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -437,6 +401,31 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
         </div>
     </div>
 
+    <!-- เพิ่ม Modal ลบคิว -->
+    <div class="modal fade" id="deleteQueueModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">ຢືນຢັນການລຶບຄິວ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບຄິວ <strong id="queueCodeToDelete"></strong>?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> ຄຳເຕືອນ: ການດຳເນີນການນີ້ບໍ່ສາມາດຍົກເລີກໄດ້. ຂໍ້ມູນຄິວ, ໄຟລ໌ທັງໝົດ ແລະ ປະຫວັດຈະຖືກລຶບອອກຈາກລະບົບ.</p>
+                </div>
+                <form action="delete_design_queue.php" method="post">
+                    <input type="hidden" name="design_id" id="design_id_to_delete">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ຍົກເລີກ</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> ລຶບຄິວ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // เปิดใช้งาน tooltips
@@ -471,6 +460,19 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
             });
         });
         
+        // การทำงานของ Modal ลบคิว
+        const deleteButtons = document.querySelectorAll('.delete-queue-btn');
+        
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const designId = this.getAttribute('data-id');
+                const queueCode = this.getAttribute('data-code');
+                
+                document.getElementById('design_id_to_delete').value = designId;
+                document.getElementById('queueCodeToDelete').textContent = queueCode;
+            });
+        });
+        
         // ฟังก์ชันสำหรับกำหนดสถานะถัดไปที่เป็นไปได้
         function getNextStatuses(currentStatus) {
             switch(currentStatus) {
@@ -499,12 +501,12 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                     ];
                 case 'production':
                     return [
-                        { value: 'approved', label: 'ย้อนกลับไปสถานะอนุมัติแล้ว' },
-                        { value: 'completed', label: 'เสร็จสมบูรณ์' }
+                        { value: 'approved', label: 'ຍ້ອນກລັບໄປສະຖານະອະນຸມັດແລ້ວ' },
+                        { value: 'completed', label: 'ສຳເລັດສົມບູນ' }
                     ];
                 case 'completed':
                     return [
-                        { value: 'production', label: 'ย้อนกลับไปสถานะการผลิต' }
+                        { value: 'production', label: 'ຍ້ອນກລັບໄປສະຖານະການຜະລິດ' }
                     ];
                 default:
                     return [
@@ -514,11 +516,10 @@ $approvedResult = $conn->query($approvedQuery)->fetch_assoc();
                         { value: 'revision', label: 'ລູກຄ້າຂໍແກ້ໄຂ' },
                         { value: 'approved', label: 'ລູກຄ້າອະນຸມັດແລ້ວ' },
                         { value: 'production', label: 'ສົ່ງໄປທີ່ຄິວຜະລິດ' },
-                        { value: 'completed', label: 'ສຳເລັດ' }
+                        { value: 'completed', label: 'ສຳເລັດສົມບູນ' }
                     ];
             }
         }
-    });
-    </script>
+    });    </script>
 </body>
 </html>

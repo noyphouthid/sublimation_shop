@@ -3,7 +3,7 @@
 $host = "localhost";
 $username = "root"; // เปลี่ยนตามการตั้งค่าของคุณ
 $password = ""; // เปลี่ยนตามการตั้งค่าของคุณ
-$database = "sublimation_shop";
+$database = "sublimation_shops";
 
 // สร้างการเชื่อมต่อ
 $conn = new mysqli($host, $username, $password, $database);

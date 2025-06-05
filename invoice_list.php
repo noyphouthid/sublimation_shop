@@ -61,7 +61,7 @@ if ($result && $result->num_rows > 0) {
                 <h2><i class="fas fa-file-invoice"></i> ລາຍການໃບສະເໜີລາຄາ</h2>
             </div>
             <div class="col text-end">
-                <a href="add_invoice.php" class="btn btn-primary">
+                <a href="add_invoice_independent.php" class="btn btn-primary">
                     <i class="fas fa-plus"></i> ສ້າງໃບສະເໜີລາຄາໃໝ່
                 </a>
             </div>
